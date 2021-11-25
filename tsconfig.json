@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES6",
     "lib": [
       "dom",
       "dom.iterable",
@@ -20,9 +20,12 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "sourceMap": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "outDir": "dist"
   },
   "include": [
-    "src"
+    "src",
+    "server",
+    "./*.ts"
   ]
 }
