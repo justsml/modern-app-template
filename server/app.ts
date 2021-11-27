@@ -1,11 +1,11 @@
 // From Dan's Guides: https://github.com/justsml/guides/tree/master/express/setup-guide
-// TODO: INSTALL PRE-REQS:
+// TODO: INSTALL PRE-REQUISITES:
 //  npm install express cors morgan helmet nodemon
 import express, { Request, Response, NextFunction } from "express";
 import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
-import CatRouter from "./routes/cats";
+import ReposRouter from "./modules/repos/router";
 
 export default express()
   .use(helmet())
@@ -13,7 +13,7 @@ export default express()
   .use(express.urlencoded({ extended: false }))
   .use(morgan(process.env.NODE_ENV !== "production" ? "dev" : "combined"))
   .use(cors({ origin: true, credentials: true }))
-  .use("/api/cat", CatRouter)
+  .use("/api/repos", ReposRouter)
   // The following 2 `app.use`'s MUST be last
   .use(notFound)
   .use(errorHandler);
