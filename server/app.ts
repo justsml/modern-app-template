@@ -28,7 +28,7 @@ function errorHandler(
   error: Error,
   request: Request,
   response: Response,
-  next: NextFunction
+  _next: NextFunction
 ) {
   console.error("ERROR", error);
   const stack = process.env.NODE_ENV !== "production" ? error.stack : undefined;

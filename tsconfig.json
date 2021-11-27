@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "ES5",
     "lib": [
       "dom",
       "dom.iterable",
@@ -27,6 +27,7 @@
     "src",
     "packages",
     "server",
-    "./*.ts"
-, "packages"  ]
+    "./*.ts",
+    "packages"
+  ]
 }

@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { mockFetchResponse } from "./utils/mockFetchResponse";
 import fetchFactory from "./validateFetchFactory";
 
@@ -17,7 +18,7 @@ describe("fetchFactory (Minimal/Fixture Mocks)", () => {
       // Use jest to override node-fetch with a super fake implementation.
       jest.mock("node-fetch", () => mockFetchResponse({ user: `Dan` }));
       // Create a fetch wrapper that will validate the response.
-      const fetchValidator = fetchFactory(RequestBodySchema.parse);
+      const fetchValidator = fetchFactory(data => RequestBodySchema.parse(data));
 
       return fetchValidator(`https://example.local/notes`)
         .then((response) => response.json())
@@ -29,7 +30,7 @@ describe("fetchFactory (Minimal/Fixture Mocks)", () => {
       // Use jest to override node-fetch with a super fake implementation.
       jest.mock("node-fetch", () => mockFetchResponse({ id: 1 }));
       // Create a fetch wrapper that will validate the response.
-      const fetchValidator = fetchFactory(RequestBodySchema.parse);
+      const fetchValidator = fetchFactory(data => RequestBodySchema.parse(data));
 
       return expect(() =>
         fetchValidator(`https://example.local/notes`)
@@ -44,9 +45,9 @@ describe("fetchFactory (Minimal/Fixture Mocks)", () => {
   describe("request body validation", () => {
     it("should allow valid POST", () => {
       // Use jest to override node-fetch with a super fake implementation.
-      jest.mock("node-fetch", () => mockFetchResponse({ user: `Dan` }));
+      jest.mock("node-fetch", () => mockFetchResponse({ id: 42, user: `Dan` }));
       // Create a fetch wrapper that will validate the response.
-      const fetchValidator = fetchFactory({ request: ResponseSchema.parse });
+      const fetchValidator = fetchFactory({ request: data => ResponseSchema.parse(data) });
 
       return fetchValidator(`https://example.local/notes`, {
         body: JSON.stringify({ note: "Dan" }),
@@ -60,7 +61,7 @@ describe("fetchFactory (Minimal/Fixture Mocks)", () => {
       // Use jest to override node-fetch with a super fake implementation.
       jest.mock("node-fetch", () => mockFetchResponse({ id: 1 }));
       // Create a fetch wrapper that will validate the response.
-      const fetchValidator = fetchFactory(RequestBodySchema.parse);
+      const fetchValidator = fetchFactory(data => RequestBodySchema.parse(data));
 
       return expect(() =>
         fetchValidator(`https://example.local/notes`)
