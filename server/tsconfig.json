@@ -22,6 +22,6 @@
     "outDir": "dist",
     "useUnknownInCatchVariables": false
   },
-  "include": ["lib", "modules", "app.ts", "index.ts"],
+  "include": ["lib", "modules", "utils", "app.ts", "index.ts"],
   "exclude": ["**/node_modules", "**/.*/", "**/dist"]
 }

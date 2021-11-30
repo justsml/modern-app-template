@@ -7,3 +7,4 @@
     - [x] [PollyJS example](server/lib/github-api.test.ts)
 - [ ] Pure unit tests.
 - [x] Integrated [Server](/server) & [Client](/src) example.
+- [ ] Multi-project Jest.
