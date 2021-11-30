@@ -6,8 +6,6 @@
   "type": "module",
   "scripts": {
     "start": "nodemon --watch './**/*.ts' --ignore './**/*.spec.ts' --exec 'ts-node' ./index.ts"
-    
-
   },
   "keywords": [],
   "author": "",
@@ -21,6 +19,7 @@
     "nodemon": "^2.0.15"
   },
   "devDependencies": {
-    "@types/express": "^4.17.13"
+    "@types/express": "^4.17.13",
+    "@types/node-fetch": "v2"
   }
 }

@@ -16,7 +16,7 @@ describe("fetchFactory (Minimal/Fixture Mocks)", () => {
   describe("response payload validation", () => {
     it("should silently handle good response", () => {
       // Use jest to override node-fetch with a super fake implementation.
-      jest.mock("node-fetch", () => mockFetchResponse({ user: `Dan` }));
+      jest.mock("node-fetch", () => mockFetchResponse({ note: `Dan` }));
       // Create a fetch wrapper that will validate the response.
       const fetchValidator = fetchFactory(data => RequestBodySchema.parse(data));
 
@@ -36,8 +36,14 @@ describe("fetchFactory (Minimal/Fixture Mocks)", () => {
         fetchValidator(`https://example.local/notes`)
           .then((response) => response.json())
           .then((body) => {
+            console.log('.then, oh noes', {body});
             expect(body).toEqual({ note: "Dan" });
           })
+          .catch((error) => {
+            console.log('Error caught:', error);
+            expect(error).toBeInstanceOf(Error);
+          })
+
       ).toThrowError(/Invalid/);
     });
   });
@@ -47,14 +53,17 @@ describe("fetchFactory (Minimal/Fixture Mocks)", () => {
       // Use jest to override node-fetch with a super fake implementation.
       jest.mock("node-fetch", () => mockFetchResponse({ id: 42, user: `Dan` }));
       // Create a fetch wrapper that will validate the response.
-      const fetchValidator = fetchFactory({ request: data => ResponseSchema.parse(data) });
+      const fetchValidator = fetchFactory({ request: data => {
+        console.log('pre-validate', data);
+        return ResponseSchema.parse(data);
+      } });
 
       return fetchValidator(`https://example.local/notes`, {
         body: JSON.stringify({ note: "Dan" }),
       })
         .then((response) => response.json())
         .then((body) => {
-          expect(body).toEqual({ note: "Dan" });
+          expect(body).toEqual({ id: 42, note: "Dan" });
         });
     });
     it("should throw on invalid response", () => {
@@ -69,7 +78,7 @@ describe("fetchFactory (Minimal/Fixture Mocks)", () => {
           .then((body) => {
             expect(body).toEqual({ note: "Dan" });
           })
-      ).toThrowError(/Invalid/);
+      ).toThrow();
     });
   });
 });

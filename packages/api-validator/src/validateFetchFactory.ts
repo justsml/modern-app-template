@@ -16,10 +16,14 @@ export default function fetchFactory<TInput, TOutput>(
     if (requestBodyValidator) {
       // Currently only JSON is supported.
       if (typeof init.body === "string") {
-        const body = JSON.parse(init.body);
-        if (body) {
-          const isValid = requestBodyValidator(body as any);
-          if (!isValid) throw new TypeError(`Invalid request body`);
+        try {
+          const body = JSON.parse(init.body);
+          if (body) {
+            const isValid = requestBodyValidator(body as any);
+            if (!isValid) throw new TypeError(`Invalid request body`);
+          }
+        } catch (error) {
+          return Promise.reject(error);
         }
       } else {
         throw new TypeError(
