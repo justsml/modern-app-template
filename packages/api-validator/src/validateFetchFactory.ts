@@ -1,4 +1,4 @@
-import fetch, { RequestInit, Response } from "node-fetch";
+import type { RequestInit, Response } from "node-fetch";
 
 import { PathRule } from "..";
 
@@ -31,21 +31,23 @@ export default function fetchFactory<TInput, TOutput>(
         );
       }
     }
-    return fetch(url, init)
-      .then((response) => {
-        // save response to replay later.
-        _response = response.clone();
-        return response.json() as any as TOutput;
-      })
-      .then((body: TOutput) => {
-        // validate response
-        if (responseValidator) {
-          const validatorResult = responseValidator(body as any);
-          if (!validatorResult)
-            throw TypeError(`Invalid response body: ${JSON.stringify(body)}`);
-        }
-        // Replay the request back, fast since response already buffered.
-        return _response;
-      });
+    return import("node-fetch").then(({ default: fetch }) => {
+      return fetch(url, init)
+        .then((response) => {
+          // save response to replay later.
+          _response = response.clone();
+          return response.json() as any as TOutput;
+        })
+        .then((body: TOutput) => {
+          // validate response
+          if (responseValidator) {
+            const validatorResult = responseValidator(body as any);
+            if (!validatorResult)
+              throw TypeError(`Invalid response body: ${JSON.stringify(body)}`);
+          }
+          // Replay the request back, fast since response already buffered.
+          return _response;
+        });
+    });
   };
 }
