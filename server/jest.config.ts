@@ -4,6 +4,7 @@ import type { Config } from "@jest/types";
 const config: Config.InitialOptions = {
   rootDir: ".",
   preset: "ts-jest",
+  // testEnvironment: 'setup-polly-jest/jest-environment-jsdom',
   verbose: true,
   testPathIgnorePatterns: ["node_modules", "dist"],
   globals: {

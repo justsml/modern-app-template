@@ -4,6 +4,7 @@
   "description": "",
   "type": "commonjs",
   "main": "index.js",
+  "exports": "./dist/index.js",
   "scripts": {
     "test": "jest"
   },

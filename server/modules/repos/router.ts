@@ -1,5 +1,5 @@
 import express from 'express';
-import { getRepo } from 'server/lib/github-api';
+import { getRepo } from '../../lib/github-api';
 
 const router = express.Router();
 router.get('/:owner/:repo', (request, response, next) => {

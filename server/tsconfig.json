@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "extendedDiagnostics": true,
+    "target": "ES5",
+    "lib": ["esnext"],
+    // "extendedDiagnostics": true,
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -11,18 +11,17 @@
     "alwaysStrict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
+    "isolatedModules": false,
+    // "noEmit": true,
     "sourceMap": true,
     "baseUrl": ".",
     "rootDir": ".",
     "outDir": "dist",
     "useUnknownInCatchVariables": false
   },
-  "include": ["src", "packages", "server"],
+  "include": ["lib", "modules", "app.ts", "index.ts"],
   "exclude": ["**/node_modules", "**/.*/", "**/dist"]
 }
