@@ -6,6 +6,7 @@ const config: Config.InitialOptions = {
     "<rootDir>/server",
     "<rootDir>/packages/api-validator"
   ],
+  verbose: true,
 };
 
 export default config;

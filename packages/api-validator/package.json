@@ -18,5 +18,8 @@
   "devDependencies": {
     "@types/node-fetch": "v2",
     "zod": "^3.11.6"
+  },
+  "dependencies": {
+    "path-to-regexp": "^6.2.0"
   }
 }
