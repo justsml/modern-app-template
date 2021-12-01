@@ -1,14 +1,27 @@
 # Api Request & Response Runtime Validation
 
-_For those who put too much trust in TypeScript._
+_For those who put too much trust in TypeScript_ ✨
+
+## TODO
+
+- [ ] Add support for path mapping input.
+- [ ] Add logging override (to send to DD, Sentry, etc.)
 
 ```ts
 
 export const paths = {
   `/api/user`: checkUserSchema,
-  `/api/repos/`: repoSchema
+  `/api/repos/`: repoSchema,
+  `/api/notes`: {
+    post: {
+      request: (data) => schema_note.parse(data),
+      response: (data) => schema_id_and_note.parse(data),
+    },
+    get: data => schema_id_and_note.parse(data)
+  }
 }
 
+const fetchSafe = validatedFetchFactory(paths)
 
 import { z } from "zod";
 

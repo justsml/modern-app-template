@@ -67,10 +67,8 @@ describe("fetchFactory (Minimal/Fixture Mocks)", () => {
       );
       // Create a fetch wrapper that will validate the response.
       const fetchValidator = fetchFactory({
-        response: (data) => {
-          // console.log("pre-validate", data);
-          return schema_id_and_note.parse(data);
-        },
+        // request: (data) => schema_note.parse(data),
+        response: (data) => schema_id_and_note.parse(data),
       });
 
       expect.assertions(1);
