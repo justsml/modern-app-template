@@ -2,9 +2,10 @@
 
 - [x] [HTTP Validators](/packages/api-validator) (Zod, Joi, ad-hoc function)
 - [ ] Testing with variety of mocking strategies.
-  - [x] [Shallow fakes.](/packages/api-validator/src/utils/mockFetchResponse.ts)
+  - [x] [Shallow fakes](/packages/api-validator/src/utils/mockFetchResponse.ts)
   - [ ] Using MSW, Mirage, or PollyJS.
     - [x] [PollyJS example](server/lib/github-api.test.ts)
 - [ ] Pure unit tests.
 - [x] Integrated [Server](/server) & [Client](/src) example.
-- [ ] Multi-project Jest.
+- [x] Yarn workspaces (multi `package.json`, single `node_modules`.)
+- [x] Multi-project Jest w/ GH Action runner.
