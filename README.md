@@ -2,7 +2,7 @@
 
 - [x] [HTTP Validators](/packages/api-validator) (Zod, Joi, ad-hoc function)
 - [ ] Testing with variety of mocking strategies.
-  - [x] [Shallow fakes](/packages/api-validator/src/utils/mockFetchResponse.ts)
+  - [x] [Shallow fakes](/packages/api-validator/src/utils/mockFetch.ts)
   - [ ] Using MSW, Mirage, or PollyJS.
     - [x] [PollyJS example](server/lib/github-api.test.ts)
 - [ ] Pure unit tests.

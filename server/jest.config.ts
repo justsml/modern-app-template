@@ -7,6 +7,7 @@ const config: Config.InitialOptions = {
   // testEnvironment: 'setup-polly-jest/jest-environment-jsdom',
   verbose: true,
   testPathIgnorePatterns: ["node_modules", "dist"],
+  resetModules: true,
   globals: {
     "ts-jest": {
       useESM: true,

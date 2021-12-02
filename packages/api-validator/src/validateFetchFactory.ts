@@ -51,6 +51,8 @@ export default function fetchFactory<TInput, TOutput>(
         : typeof validator === "object"
         ? validator.response
         : undefined;
+
+    console.info('responseValidator=', responseValidator, 'requestBodyValidator=', requestBodyValidator);
     // check request body
     if (requestBodyValidator && typeof requestBodyValidator === "function") {
       // Currently only JSON is supported.

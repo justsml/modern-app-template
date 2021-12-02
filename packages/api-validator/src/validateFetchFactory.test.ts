@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { esModuleify } from "./utils/esModuleify";
+import { esmWrapper } from "./utils/esmWrapper";
 
-import { mockFetchResponse } from "./utils/mockFetchResponse";
+import { mockFetch } from "./utils/mockFetch";
 import fetchFactory from "./validateFetchFactory";
 
 export const schema_note = z.object({
@@ -13,84 +13,77 @@ export const schema_id_and_note = z.object({
   note: z.string().min(1).max(50),
 });
 
-describe("fetchFactory (Minimal/Fixture Mocks)", () => {
-  describe("response body validation", () => {
-    it("should silently handle good response", () => {
-      // Use jest to override node-fetch with a super fake implementation.
-      jest.mock(
-        "node-fetch",
-        esModuleify(mockFetchResponse({ body: { note: `Dan` } }))
-      );
-      // jest.mock("node-fetch", () => mockFetchResponse({body: { note: `Dan` }}));
+describe("validateFetchFactory", () => {
+  it("can handle valid response", () => {
+    jest.mock("node-fetch", esmWrapper(mockFetch({ body: { note: `Dan` } })));
 
-      // Create a fetch wrapper that will validate the response.
-      const fetchValidator = fetchFactory((data) => schema_note.parse(data));
+    const fetchValidator = fetchFactory((data) => schema_note.parse(data));
 
-      return fetchValidator(`https://api.github.com/users/justsml`)
-        .then((response) => {
-          // console.log(response);
-          return response.json();
-        })
-        .then((body) => {
-          expect(body).toEqual({ note: "Dan" });
-        });
-    });
-    it("should throw on invalid response", () => {
-      // Use jest to override node-fetch with a super fake implementation.
-      jest.mock(
-        "node-fetch",
-        esModuleify(mockFetchResponse({ body: { id: 1 } }))
-      );
-      // Create a fetch wrapper that will validate the response.
-      const fetchValidator = fetchFactory((data) => {
-        // console.log('schema_note.validate:', data);
-        return schema_id_and_note.parse(data)
+    expect.assertions(1);
+    return fetchValidator(`https://api.github.com/users/justsml`)
+      .then((response) => response.json())
+      .then((body) => {
+        expect(body).toEqual({ note: "Dan" });
       });
+  });
+  it("can throw on invalid response", () => {
+    jest.mock("node-fetch", esmWrapper(mockFetch({ body: { id: 1 } })));
+    const fetchValidator = fetchFactory((data) => schema_id_and_note.parse(data));
 
-      expect.assertions(1);
-      return fetchValidator(`https://example.local/notes`)
-        .then((response) => response.json())
-        // .then((body) => {
-        //   // console.log(".then, oh noes", { body });
-        //   // expect(body).toEqual({ note: "Dan" });
-        // })
-        .catch((error) => expect(error).toBeInstanceOf(Error));
-    });
+    expect.assertions(1);
+    return fetchValidator(`https://example.local/notes`)
+      .then((response) => response.json())
+      .catch((error) => expect(error).toBeInstanceOf(Error));
   });
 
-  describe("request body validation", () => {
-    it("should throw on invalid POST response", () => {
-      // Use jest to override node-fetch with a super fake implementation.
-      jest.mock(
-        "node-fetch",
-        esModuleify(mockFetchResponse({ body: { id: 42, user: `Dan` } }))
-      );
-      // Create a fetch wrapper that will validate the response.
-      const fetchValidator = fetchFactory({
-        // request: (data) => schema_note.parse(data),
-        response: (data) => schema_id_and_note.parse(data),
+  it("can throw on invalid request body", () => {
+    jest.mock("node-fetch", esmWrapper(mockFetch({ body: { user: 1 } })));
+    const fetchValidator = fetchFactory({
+      response: (data) => schema_id_and_note.parse(data),
+    });
+
+    expect.assertions(1);
+    return fetchValidator(`https://example.local/notes`, {
+      method: "PUT",
+      body: JSON.stringify({ note: "Dan" }),
+    })
+      .then((response) => response.json())
+      .catch((error) => expect(error).toBeInstanceOf(Error));
+  });
+
+  it("can validate request and response", () => {
+    jest.mock(
+      "node-fetch",
+      esmWrapper(mockFetch({ body: { id: 42, note: `Dan` } }))
+    );
+    const fetchValidator = fetchFactory({
+      response: (data) => schema_id_and_note.parse(data),
+      request: (data) => schema_note.parse(data),
+    });
+
+    expect.assertions(1);
+    return fetchValidator(`https://example.local/notes`, {
+      method: "POST",
+      body: JSON.stringify({ note: "Dan" }),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        expect(response).toEqual({ id: 42, note: "Dan" });
       });
+  });
 
-      expect.assertions(1);
-      return fetchValidator(`https://example.local/notes`, {
-        method: "POST",
-        body: JSON.stringify({ note: "Dan" }),
-      })
-        .then((response) => response.json())
-        .catch((error) => expect(error).toBeInstanceOf(Error));
+  it("can validate valid request payload", () => {
+    jest.mock("node-fetch", esmWrapper(mockFetch({ body: { id: 1 } })));
+    const fetchValidator = fetchFactory({
+      request: (data) => schema_note.parse(data),
     });
-    it("should throw on invalid response", () => {
-      // Use jest to override node-fetch with a super fake implementation.
-      jest.mock(
-        "node-fetch",
-        esModuleify(mockFetchResponse({ body: { id: 1 } }))
-      );
-      // Create a fetch wrapper that will validate the response.
-      const fetchValidator = fetchFactory((data) => schema_note.parse(data));
 
-      return fetchValidator(`https://example.local/notes`)
-        .then((response) => response.json())
-        .catch((error) => expect(error).toBeInstanceOf(Error));
-    });
+    expect.assertions(1);
+    return fetchValidator(`https://example.local/notes`, {
+      method: "POST",
+      body: JSON.stringify({ note: "Dan" }),
+    })
+      .then((response) => response.json())
+      .then((data) => expect(data.id).toEqual(1));
   });
 });

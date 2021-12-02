@@ -6,6 +6,8 @@ const config: Config.InitialOptions = {
   preset: "ts-jest",
   verbose: true,
   testPathIgnorePatterns: ["node_modules", "dist"],
+  resetMocks: true,
+  resetModules: true,
   globals: {
     "ts-jest": {
       useESM: true,

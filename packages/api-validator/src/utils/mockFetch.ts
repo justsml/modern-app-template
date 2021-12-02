@@ -1,7 +1,7 @@
 import type { Response } from "node-fetch";
 import { Headers } from "node-fetch";
 
-export const mockFetchResponse =
+export const mockFetch =
   (
     { url = "/", body = {}, status = 200, headers = {} } = {
       url: "/",
@@ -22,7 +22,7 @@ export const mockFetchResponse =
       blob: () => Promise.resolve(new Blob([JSON.stringify(body)])),
       json: () => Promise.resolve(body),
       text: () => Promise.resolve(JSON.stringify(body)),
-      clone: () => mockFetchResponse({ url, body, status, headers }),
+      clone: () => mockFetch({ url, body, status, headers }),
       redirected: false,
       size: JSON.stringify(body).length,
       url,
