@@ -21,8 +21,8 @@ export type Rules<TInput, TOutput> =
 
 /** pathPattern is a key expression in the following format:
  *
- * ```
- * {
+ * ```ts
+ * const pathRules ={
  *   `/users/:id?`: userSchemaCheck, // matches `/users/123` and `/users/`
  *   `POST:/messages`: { request: messageSchemaCheck }, // matches `/messages`
  * }

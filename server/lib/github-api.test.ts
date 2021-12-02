@@ -2,13 +2,11 @@
 import autoSetupPolly from "../utils/auto-setup-polly";
 import { getUser, getRepo, getUserRepos } from "./github-api";
 
-let context: ReturnType<typeof autoSetupPolly>;
+// let context: ReturnType<typeof autoSetupPolly>;
 
 beforeAll(() => {
-  context = autoSetupPolly();
+  autoSetupPolly();
 });
-
-afterAll(() => context.polly.flush());
 
 test("getUser", async () => {
   const user = await getUser("justsml");
