@@ -1,35 +1,46 @@
 # Api Request & Response Runtime Validation
 
+Runtime data validation of HTTP requests.
+
 _For those who put too much trust in TypeScript_ ✨
 
 ## TODO
 
-- [ ] Add support for path mapping input.
-- [ ] Add logging override (to send to DD, Sentry, etc.)
+- [x] Add support for path mapping input.
+- [x] Add logging callback (to send to DataDog, Sentry, etc.)
+
+## Examples
+
+### Path based validation
 
 ```ts
+import fetchValidationFactory from './fetchValidationFactory';
 
+// `fetch-validated.ts`
 export const paths = {
   `/api/user`: checkUserSchema,
-  `/api/repos/`: repoSchema,
-  `/api/notes`: {
-    post: {
-      request: (data) => schema_note.parse(data),
-      response: (data) => schema_id_and_note.parse(data),
-    },
-    get: data => schema_id_and_note.parse(data)
+  `/api/repos/`: checkRepoSchema,
+  `GET:/api/notes`: data => schema_id_and_note.parse(data),
+  `POST:/api/notes`: {
+    request: (data) => schema_note.parse(data),
+    response: (data) => schema_id_and_note.parse(data),
   }
-}
+};
 
-const fetchSafe = validatedFetchFactory(paths)
+const fetchValidated = fetchValidationFactory(paths);
+export default fetchValidated;
+```
 
+### Zod Schema Validation
+
+```ts
 import { z } from "zod";
 
 export default function checkUserSchema(input: unknown) {
-  return GitUserSchema.
+  return GitUserSchema.parse(input);
 }
 
-export const GitUserSchema = z.object({
+const GitUserSchema = z.object({
   login: z.string().required(),
   id: z.number().required(),
   nodeId: z.string().required(),

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { esmWrapper } from "./utils/esmWrapper";
 import { mockFetch } from "./utils/mockFetch";
-import fetchFactory from "./validateFetchFactory";
+import fetchFactory from "./fetchValidationFactory";
 
 export const schema_note = z.object({
   note: z.string().min(1).max(50),
@@ -12,7 +12,7 @@ export const schema_id_and_note = z.object({
   note: z.string().min(1).max(50),
 });
 
-describe("validateFetchFactory", () => {
+describe("fetchValidationFactory", () => {
   it("can handle valid response", () => {
     expect.assertions(1);
     jest.mock("node-fetch", esmWrapper(mockFetch({ body: { note: `Dan` } })));
@@ -28,7 +28,9 @@ describe("validateFetchFactory", () => {
   it("can throw on invalid response", () => {
     expect.assertions(1);
     jest.mock("node-fetch", esmWrapper(mockFetch({ body: { id: 1 } })));
-    const fetchValidator = fetchFactory((data) => schema_id_and_note.parse(data));
+    const fetchValidator = fetchFactory((data) =>
+      schema_id_and_note.parse(data)
+    );
 
     return fetchValidator(`https://example.local/notes`)
       .then((response) => response.json())
@@ -90,11 +92,37 @@ describe("validateFetchFactory", () => {
     expect.assertions(1);
     jest.mock("node-fetch", esmWrapper(mockFetch({ body: { id: 1 } })));
     const callback = jest.fn();
-    const fetchValidator = fetchFactory((data) => schema_id_and_note.parse(data), {callback, ignoreErrors: true});
+    const fetchValidator = fetchFactory(
+      (data) => schema_id_and_note.parse(data),
+      { callback, ignoreErrors: true }
+    );
 
     return fetchValidator(`https://example.local/notes`)
       .then((response) => response.json())
       .then((_data) => expect(callback).toBeCalledTimes(1));
   });
 
+  it("can support multiple path-based validators", () => {
+    expect.assertions(1);
+    jest.mock("node-fetch", esmWrapper(mockFetch({ body: { id: 1 } })));
+    const callback = jest.fn();
+    const fetchValidator = fetchFactory(
+      {
+        'POST:/notes': {
+          'request': (data) => schema_note.parse(data),
+          'response': (data) => schema_id_and_note.parse(data),
+        }
+      },
+      { callback, ignoreErrors: true }
+    );
+
+    return fetchValidator(`http://localhost.local/notes`, {
+      method: "POST",
+      body: JSON.stringify({ note: "Dan" }),
+    })
+      .then((response) => response.json())
+      .then((_data) => {
+        expect(callback.mock.calls[0]?.[0]?.mode).toBe('response')
+      });
+  });
 });

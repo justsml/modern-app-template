@@ -173,28 +173,44 @@ export default function fetchFactory<TInput, TOutput>(
   };
 }
 
+const urlFragment = /^([a-z-]+:)?\/\//i;
+
 function getPathMatcher<TInput, TOutput>(
   rules: HttpPathRules<TInput, TOutput>
 ): RuleMatcher<TInput, TOutput> {
   const paths = Object.keys(rules);
 
   const pathMatchers = paths.map((p) => ({
-    path: p, // TODO: Add HTTP VERB Support here-ish
+    key: p,
     method: getMethodPrefix(p),
-    pattern: pathToRegexp(p),
+    path: getPathExtracted(p), // TODO: Add HTTP VERB Support here-ish
+    pattern: pathToRegexp(getPathExtracted(p)),
   }));
 
   return (inputPath: string, inputMethod: string = "get") => {
+    inputMethod = (inputMethod).toLowerCase();
+    // Check for URL, extract path if it exists.
+    if (urlFragment.test(inputPath)) {
+      const url = new URL(inputPath);
+      inputPath = url.pathname;
+    }
+
     const matchingPath = pathMatchers.find(({ pattern }) =>
       pattern.test(inputPath)
     );
-    const { path, method } = matchingPath || {};
-    return path !== undefined && inputMethod === method ? rules[path] : false;
+    const { path, key, method } = matchingPath || {};
+    return path !== undefined && inputMethod === method ? rules[key!] : false;
   };
 }
 
 function getMethodPrefix(path: string) {
   let verb = (path.replace(/^([a-z-]*):?.*/gi, "$1") || "get").toLowerCase();
+  if (verb.startsWith('http')) verb = 'get';
+  return verb;
+}
+
+function getPathExtracted(path: string) {
+  let verb = (path.replace(/^([a-z-]*):?(.*)$/gi, "$2") || "/////").toLowerCase();
   if (verb.startsWith('http')) verb = 'get';
   return verb;
 }
