@@ -1,5 +1,5 @@
 {
-  "name": "api-validator",
+  "name": "@justsml/api-validator",
   "version": "1.0.0",
   "description": "",
   "type": "commonjs",

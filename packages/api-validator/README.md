@@ -1,13 +1,8 @@
-# Api Request & Response Runtime Validation
+# API Request & Response Runtime Validation
 
 Runtime data validation of HTTP requests.
 
 _For those who put too much trust in TypeScript_ ✨
-
-## TODO
-
-- [x] Add support for path mapping input.
-- [x] Add logging callback (to send to DataDog, Sentry, etc.)
 
 ## Examples
 
@@ -30,6 +25,9 @@ export const paths = {
 const fetchValidated = fetchValidationFactory(paths);
 export default fetchValidated;
 ```
+
+
+
 
 ### Zod Schema Validation
 
