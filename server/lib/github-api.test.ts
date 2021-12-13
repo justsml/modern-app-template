@@ -26,3 +26,12 @@ test("getUserRepos", async () => {
   expect(typeof repos).toBe("object");
   expect(repos.length).toBeGreaterThanOrEqual(10);
 });
+
+test("getRepo: facebook/jest", async () => {
+  const repo: any = await getRepo("facebook", "jest");
+
+  expect(typeof repo).toBe("object");
+  expect(repo?.full_name).toBe("facebook/jest");
+  expect(repo?.name).toBe("jest");
+  expect(repo?.owner?.login).toBe("facebook");
+});
