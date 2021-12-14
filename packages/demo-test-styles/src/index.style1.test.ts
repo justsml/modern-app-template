@@ -1,4 +1,4 @@
-import { processTotals } from "./transactions";
+import { processTotals } from ".";
 
 /*
 Style 1: Inline Inputs & Outputs

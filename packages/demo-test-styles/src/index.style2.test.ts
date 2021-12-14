@@ -1,5 +1,5 @@
-import { BaseTransaction } from ".";
-import { processTotals } from "./transactions";
+import type { BaseTransaction } from ".";
+import { processTotals } from ".";
 
 /*
 Style 2: Local helper function

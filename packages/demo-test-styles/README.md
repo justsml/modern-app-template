@@ -8,6 +8,12 @@ In this project we'll explore different ways to use fixtures (essentially static
 1. Tests should look more like actual implementation.
 1. Explore helper functions to generate fixtures.
 
+## Test Scoping Patterns: Examples
+
+1. [Style 1: Inline Inputs & Outputs](/packages/demo-test-styles/src/index.style1.test.ts)
+2. [Style 2: Local Helper Function](/packages/demo-test-styles/src/index.style2.test.ts)
+3. [Style 3: Hierarchy & Scoped Tests](/packages/demo-test-styles/src/index.style3.test.ts)
+
 ## Project: Transaction Processor
 
 We'll be given an array of transactions on which we'll perform operations.

@@ -2,15 +2,7 @@ export const processTotals = (txs: BaseTransaction[]): ComputedTransaction[] => 
   return txs.map(calculateTotal);
 };
 
-function calculateTotal(tx: BaseTransaction): {
-  total: number;
-  date: string;
-  subTotal: number;
-  tax?: number;
-  tip?: number;
-  category: string;
-  description?: string;
-} {
+function calculateTotal(tx: BaseTransaction): ComputedTransaction {
   let { subTotal, tip, tax } = tx;
   tip = tip ?? 0;
   tax = tax ?? 0;
