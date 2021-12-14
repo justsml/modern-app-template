@@ -2,7 +2,7 @@ import type { BaseTransaction } from ".";
 import { processTotals } from ".";
 
 /*
-Style 2: Local helper function
+Style 2: Local Helper Function
 */
 
 const mockTransactions = (
