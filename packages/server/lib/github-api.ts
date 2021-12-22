@@ -1,34 +1,33 @@
-import fetch from "node-fetch";
+import fetch, { Response } from "node-fetch";
+
+const headers = {
+  Accept: "application/json+vnd.github.v3.raw",
+  "Content-type": "application/json",
+};
 
 export const getUserRepos = async (username: string) => {
-  return fetch(`https://api.github.com/users/${username}/repos`, {
-    headers: {
-      "Accept": "application/json+vnd.github.v3.raw",
-      "Content-type": "application/json",
-    },
-  }).then((response) => response.json());
+  return fetch(`https://api.github.com/users/${username}/repos`, {headers})
+    .then(checkErrorAndReturnJson);
 };
 
 export const getUser = async (username: string): Promise<GitHubUser> => {
-  return fetch(`https://api.github.com/users/${username}`, {
-    headers: {
-      "Accept": "application/json+vnd.github.v3.raw",
-      "Content-type": "application/json",
-    },
-  }).then((response) => response.json());
+  return fetch(`https://api.github.com/users/${username}`, {headers})
+    .then(checkErrorAndReturnJson);
 };
 
 export const getRepo = async (
   owner: string,
   repo: string
 ): Promise<unknown> => {
-  return fetch(`https://api.github.com/repos/${owner}/${repo}`, {
-    headers: {
-      "Accept": "application/json+vnd.github.v3.raw",
-      "Content-type": "application/json",
-    },
-  }).then((response) => response.json());
+  return fetch(`https://api.github.com/repos/${owner}/${repo}`, {headers})
+    .then(checkErrorAndReturnJson);
 };
+
+function checkErrorAndReturnJson(response: Response) {
+  return response.ok
+    ? response.json()
+    : Promise.reject(new Error(`Http Error: ${response.status}`));
+}
 
 export interface GitHubUser {
   login: string;

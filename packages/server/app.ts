@@ -1,10 +1,9 @@
-// From Dan's Guides: https://github.com/justsml/guides/tree/master/express/setup-guide
-// TODO: INSTALL PRE-REQUISITES:
-//  npm install express cors morgan helmet nodemon
+// From: https://github.com/justsml/guides/tree/master/express/setup-guide
 import express, { Request, Response, NextFunction } from "express";
 import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
+
 import ReposRouter from "./modules/repos/router";
 import UsersRouter from "./modules/users/router";
 
@@ -16,11 +15,14 @@ export default express()
   .use(cors({ origin: true, credentials: true }))
   .use("/api/repos", ReposRouter)
   .use("/api/users", UsersRouter)
-  .get("/", (_req: Request, res: Response) => res.send("Hi! Example API Server."))
-  .get("/healthcheck", (_req: Request, res: Response) => res.send("OK"))
-  // The following 2 `app.use`'s MUST be last
-  .use(notFound)
-  .use(errorHandler);
+  .get("/", (_req: Request, res: Response) =>
+    res.send("Hi! Example API Server.")
+  )
+  .get("/ping", (_req: Request, res: Response) =>
+    res.status(200).send({ response: "pong" })
+  )
+  // The following `app.use` MUST be last!
+  .use(notFound, errorHandler);
 
 function notFound(request: Request, response: Response) {
   response

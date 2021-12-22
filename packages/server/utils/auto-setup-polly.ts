@@ -1,11 +1,12 @@
 import path from "path";
 import { Polly } from "@pollyjs/core";
 import NodeHttpAdapter from "@pollyjs/adapter-node-http";
-import FetchAdapter from "@pollyjs/adapter-fetch";
 import FSPersister from "@pollyjs/persister-fs";
 import { setupPolly } from "setup-polly-jest";
 
-Polly.register(FetchAdapter);
+// import FetchAdapter from "@pollyjs/adapter-fetch";
+// Polly.register(FetchAdapter);
+
 Polly.register(NodeHttpAdapter);
 Polly.register(FSPersister);
 
@@ -15,10 +16,10 @@ const pollyMode = process.env.POLLY_MODE ? "record" : "replay";
 export default function autoSetupPolly() {
   return setupPolly({
     adapters: ["node-http"],
-    logging: true,
+    logging: false,
     mode: pollyMode,
     flushRequestsOnStop: true,
-    expiresIn: "10d",
+    // expiresIn: "10d",
     // expiryStrategy: 'error',
     recordIfMissing: true,
     recordFailedRequests: true,

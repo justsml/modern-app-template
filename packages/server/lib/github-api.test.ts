@@ -2,10 +2,17 @@
 import autoSetupPolly from "../utils/auto-setup-polly";
 import { getUser, getRepo, getUserRepos } from "./github-api";
 
-// let context: ReturnType<typeof autoSetupPolly>;
+let pollyContext = autoSetupPolly();
 
-beforeAll(() => {
-  autoSetupPolly();
+test("getUser: custom interceptor", async () => {
+  expect.assertions(1);
+  pollyContext.polly.server
+    .get("https://api.github.com/users/failing_request_trigger")
+    .intercept((req, res) => void res.sendStatus(500));
+
+  await expect(getUser("failing_request_trigger")).rejects.toThrow(
+    "Http Error: 500"
+  );
 });
 
 test("getUser", async () => {
