@@ -2,6 +2,7 @@
 
 - [x] [HTTP Validators](/packages/api-validator) (Zod, Joi, ad-hoc function)
 - [x] Testing with variety of mocking strategies.
+  - [ ] Cypress E2E,
   - [x] [Shallow fakes](/packages/api-validator/src/utils/mockFetch.ts),
   - [x] [PollyJS](/packages/server/lib/github-api.test.ts),
   - [ ] MSW,
